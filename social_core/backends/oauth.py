@@ -335,12 +335,13 @@ class BaseOAuth2(OAuthAuth):
         params = self.auth_params(state)
         params.update(self.get_scope_argument())
         params.update(self.auth_extra_arguments())
+        redirect_uri = params.pop('redirect_uri')
         params = urlencode(params)
         if not self.REDIRECT_STATE:
             # redirect_uri matching is strictly enforced, so match the
             # providers value exactly.
             params = unquote(params)
-        return '{0}?{1}'.format(self.authorization_url(), params)
+        return '{0}?{1}&redirect_uri={2}'.format(self.authorization_url(), params, redirect_uri)
 
     def auth_complete_params(self, state=None):
         client_id, client_secret = self.get_key_and_secret()
